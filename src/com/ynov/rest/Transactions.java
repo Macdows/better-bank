@@ -4,6 +4,8 @@ import com.ynov.managers.AccountManager;
 import com.ynov.managers.TransactionManager;
 import com.ynov.models.Account;
 import com.ynov.models.Transaction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -18,8 +20,13 @@ import java.util.Date;
 @WebServlet("/api/transaction")
 public class Transactions extends HttpServlet {
 
+    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("REST :: Transaction :: POST /api/transaction");
+
         String name = req.getParameter("name");
         Float amount = Float.parseFloat(req.getParameter("amount"));
         Integer srcAccountId = Integer.parseInt(req.getParameter("src_account"));

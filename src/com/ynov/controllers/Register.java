@@ -2,6 +2,8 @@ package com.ynov.controllers;
 
 import com.ynov.managers.UserManager;
 import com.ynov.models.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +15,9 @@ import java.io.IOException;
 
 @WebServlet("/register")
 public class Register extends HttpServlet {
+
+    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/register.jsp");
@@ -22,6 +27,7 @@ public class Register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/register.jsp");
+        logger.info("Register :: POST /register");
 
         String firstname = req.getParameter("firstname");
         String lastname = req.getParameter("lastname");
@@ -41,17 +47,21 @@ public class Register extends HttpServlet {
             System.out.println("All fields are required.");
             req.setAttribute("errorMsg", "error_all_fields_required");
             req.getRequestDispatcher("/register.jsp").forward(req,resp);
+            logger.error("Register :: POST /register :: All fields required");
         } else {
             if (existingUser != null) {
                 req.setAttribute("errorMsg", "error_user_already_exists");
                 dispatcher.forward(req, resp);
+                logger.error("Register :: POST /register :: User already exists");
             } else {
                 boolean b = UserManager.saveUser(user);
                 if (b) {
                     resp.sendRedirect(req.getContextPath() + "/login.jsp");
+                    logger.info("Register :: POST /register :: Success");
                 } else {
                     req.setAttribute("errorMsg", "error_saving_user");
                     dispatcher.forward(req, resp);
+                    logger.error("Register :: POST /register :: saveUser failed");
                 }
             }
         }

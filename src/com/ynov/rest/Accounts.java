@@ -4,6 +4,8 @@ import com.ynov.managers.AccountManager;
 import com.ynov.managers.UserManager;
 import com.ynov.models.Account;
 import com.ynov.models.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -19,8 +21,12 @@ import java.util.List;
 @WebServlet("/api/account")
 public class Accounts extends HttpServlet {
 
+    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("REST :: Accounts :: GET /api/account");
+
         //User currentUser = (User) req.getSession().getAttribute("user");
         ArrayList<JSONObject> finalJSON = new ArrayList<>();
         List<Object[]> accountList;
@@ -44,6 +50,8 @@ public class Accounts extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("REST :: Accounts :: POST /api/account");
+
         Float balance = Float.parseFloat(req.getParameter("balance"));
         Float interest_rate = Float.parseFloat(req.getParameter("interest_rate"));
         Integer userId = Integer.parseInt(req.getParameter("userId"));
@@ -64,6 +72,8 @@ public class Accounts extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("REST :: Accounts :: DELETE /api/account");
+
         Integer id = Integer.parseInt(req.getParameter("id"));
 
         AccountManager.deleteAccount(id);

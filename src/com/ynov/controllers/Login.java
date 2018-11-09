@@ -2,6 +2,8 @@ package com.ynov.controllers;
 
 import com.ynov.managers.UserManager;
 import com.ynov.models.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
@@ -12,9 +14,13 @@ import javax.servlet.http.*;
 @WebServlet("/login")
 public class Login extends HttpServlet{
 
+
+    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher loginDispatcher = getServletContext().getRequestDispatcher("/login.jsp");
+        logger.info("Login :: POST /login");
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
@@ -24,6 +30,7 @@ public class Login extends HttpServlet{
         if(user == null) {
             req.setAttribute("errorMsg", "error_invalid_credentials");
             loginDispatcher.forward(req, resp);
+            logger.error("Login :: POST /login :: Invalid credentials");
         } else {
             HttpSession oldSession = req.getSession(false);
             if (oldSession != null) {
@@ -35,6 +42,7 @@ public class Login extends HttpServlet{
 
             newSession.setAttribute("user", user);
             resp.sendRedirect(req.getContextPath() + "/accounts");
+            logger.info("Login :: POST /login :: Success");
         }
     }
 
