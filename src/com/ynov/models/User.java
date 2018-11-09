@@ -1,5 +1,7 @@
 package com.ynov.models;
 
+import com.ynov.managers.UserManager;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,19 +51,18 @@ public class User {
     private boolean testStr (String str, String regex) {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(str);
-        System.out.println(str + ", " + regex + ", " + m.lookingAt());
         return m.lookingAt();
     }
 
     public void changePassword (String newPassword) {
         if (newPassword.length() < 8) {
-            throw new java.lang.RuntimeException("Password too short.");
+            throw new RuntimeException("Password too short.");
         } else if (!this.testStr(newPassword, ".*\\d.*")) {
             throw new RuntimeException("Password must have a number.");
         } else if (!this.testStr(newPassword, ".*[A-Z].*")) {
             throw new RuntimeException("Password must have a capital letter.");
         } else if (!this.testStr(newPassword, ".*[`~!@#$%^&*()\\\\-_=+\\\\\\\\|\\\\[{\\\\]};:'\\\",<.>/?].*")) {
-             throw new RuntimeException("Password must have a special character..");
+             throw new RuntimeException("Password must have a special character.");
         //} else if (this.testStr(newPassword, ".*[p{InCombiningDiacriticalMarks}].*")) {
         //    throw new RuntimeException("Password must not have characters with accents.");
         } else {
@@ -78,10 +79,6 @@ public class User {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstname() {
@@ -102,6 +99,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getBirth_date() { return birth_date; }

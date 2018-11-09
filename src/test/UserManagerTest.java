@@ -15,15 +15,14 @@ public class UserManagerTest {
     public void saveUser() {
         User user = new User("Test", "Man", "test.man@yes.man", "t3stm4n", "test", "01/10/1987", "0102345678", "156 Test avenue");
 
-        assertEquals(user, UserManager.saveUser(user));
+        assertTrue(UserManager.saveUser(user) == true);
 
     }
 
     @Test
     public void loadUser() {
         User user = new User("Test", "Man", "test.man@yes.man", "t3stm4n", "test", "01/10/1987", "0102345678", "156 Test avenue");
-        System.out.println("getId " + user.getId());
 
-        assertEquals(user, UserManager.loadUserById(user.getId()));
+        assertEquals(user, UserManager.loadUserById(1));
     }
 }

@@ -6,7 +6,6 @@
 
         <class>com.ynov.models.User</class>
         <class>com.ynov.models.Account</class>
-        <class>com.ynov.models.AccountType</class>
         <class>com.ynov.models.Transaction</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 

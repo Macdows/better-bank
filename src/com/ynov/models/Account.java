@@ -12,20 +12,23 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String label;
     private Float balance;
     private Float interest_rate;
     private Date created_at;
 
-    @Enumerated(EnumType.STRING)
-    private AccountType account_type;
-
-    @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="src_account", cascade = CascadeType.ALL)
     private Set<Transaction> transactions = new LinkedHashSet<Transaction>();
 
+    @OneToMany(mappedBy="dest_account", cascade = CascadeType.ALL)
+    private Set<Transaction> credited_by = new LinkedHashSet<Transaction>();
+
     @ManyToOne
+    @JoinColumn(name="user")
     private User user;
 
-    public Account(Float balance, Float interest_rate, User user) {
+    public Account(String label, Float balance, Float interest_rate, User user) {
+        this.label = label;
         this.balance = balance;
         this.interest_rate = interest_rate;
         this.user = user;
@@ -41,25 +44,19 @@ public class Account {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getLabel() {
+        return label;
     }
 
-    public AccountType getAccount_type() {
-        return account_type;
-    }
-
-    public void setAccount_type(AccountType account_type) {
-        this.account_type = account_type;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public Float getBalance() {
         return balance;
     }
 
-    public void setBalance(Float balance) {
-        this.balance = Float.sum(this.balance, balance);
-    }
+    public void setBalance(Float balance) { this.balance = balance; }
 
     public Float getInterest_rate() {
         return interest_rate;
@@ -92,4 +89,9 @@ public class Account {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Set<Transaction> getCredited_by() {
+        return credited_by;
+    }
+
 }

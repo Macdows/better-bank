@@ -2,6 +2,8 @@ package com.ynov.managers;
 
 import com.ynov.models.Account;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.List;
 
 public class AccountManager extends BaseManager
 {
@@ -13,17 +15,11 @@ public class AccountManager extends BaseManager
         return em.find(Account.class, account.getId()).getId() == account.getId() ;
     }
 
-    public static void deleteAccount(Account account){
+    public static void deleteAccount(int accountId){
         EntityManager em = getEntityManager();
+        Account account = em.find(Account.class, accountId);
         em.getTransaction().begin();
         em.remove(account);
-        em.getTransaction().commit();
-    }
-
-    public static void updateBalance(Float balance) {
-        EntityManager em = getEntityManager();
-        em.getTransaction().begin();
-        em.persist();
         em.getTransaction().commit();
     }
 
@@ -31,6 +27,23 @@ public class AccountManager extends BaseManager
         EntityManager em  = getEntityManager();
         Account account = em.find(Account.class, accountId);
         return account;
+    }
+
+    public static List<Object[]> loadAccountList(/*int userId*/){
+        EntityManager em = getEntityManager();
+        Query query = em.createNativeQuery ("SELECT * from account");
+        query.getResultList().toArray();
+        return query.getResultList();
+    }
+
+    public static void updateBalance(int accountId, float balance) {
+        EntityManager em = getEntityManager();
+        Account account = em.find(Account.class, accountId);
+        float amount = account.getBalance() + balance;
+        account.setBalance(amount);
+        em.getTransaction().begin();
+        em.persist(account);
+        em.getTransaction().commit();
     }
 
     /*public static void purgeTable() {

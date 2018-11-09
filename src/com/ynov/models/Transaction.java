@@ -12,14 +12,17 @@ public class Transaction {
 
     private Float amount;
     private String name;
-    private String src_account;
-    private String dest_account;
     private Date date;
 
     @ManyToOne
-    private Account account;
+    @JoinColumn(name="src_account")
+    private Account src_account;
 
-    public Transaction(String name, Float amount, Date date, String src_account, String dest_account) {
+    @ManyToOne
+    @JoinColumn(name="dest_account")
+    private Account dest_account;
+
+    public Transaction(String name, Float amount, Date date, Account src_account, Account dest_account) {
         this.name = name;
         this.amount = amount;
         this.date = date;
@@ -47,11 +50,11 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getDest_account() {
+    public Account getDest_account() {
         return dest_account;
     }
 
-    public void setDest_account(String dest_account) {
+    public void setDest_account(Account dest_account) {
         this.dest_account = dest_account;
     }
 
@@ -71,11 +74,11 @@ public class Transaction {
         this.name = name;
     }
 
-    public String getSrc_account() {
+    public Account getSrc_account() {
         return src_account;
     }
 
-    public void setSrc_account(String src_account) {
+    public void setSrc_account(Account src_account) {
         this.src_account = src_account;
     }
 }

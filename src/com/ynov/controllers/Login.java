@@ -7,14 +7,10 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 @WebServlet("/login")
 public class Login extends HttpServlet{
-
-    private static final long serialVersionUId = -3856737018663869874L;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,8 +25,16 @@ public class Login extends HttpServlet{
             req.setAttribute("errorMsg", "error_invalid_credentials");
             loginDispatcher.forward(req, resp);
         } else {
-            req.getSession().setAttribute("user", user);
-            resp.sendRedirect(req.getContextPath() + "/home");
+            HttpSession oldSession = req.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+
+            HttpSession newSession = req.getSession(true);
+            newSession.setMaxInactiveInterval(2*60);
+
+            newSession.setAttribute("user", user);
+            resp.sendRedirect(req.getContextPath() + "/accounts");
         }
     }
 

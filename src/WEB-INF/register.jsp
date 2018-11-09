@@ -6,15 +6,23 @@
 <head>
     <meta charset="utf-8" />
     <title>BetterBank</title>
+    <style>
+        form {
+            margin-top: 20px;
+        }
+        .error-msg {
+            color: red;
+        }
+    </style>
 </head>
     <body>
         <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
         <fmt:setLocale value="${language}" />
-        <fmt:setBundle basename = "com.ynov.bank"/>
+        <fmt:setBundle basename = "com.ynov.i18n.bank"/>
         <h1>
             <fmt:message key="register"/>
         </h1>
-        <c:catch var="exception">${request.getAttribute('errorMsg')}</c:catch>
+
         <form action="/register" method="POST">
             <fmt:message key="firstname"/>
             <input type="text" name="firstname">
@@ -33,8 +41,8 @@
             <input type="submit" value="Submit" />
         </form>
 
-        <c:if test = "${errorMsg != null}">
-            <c:out value = "${erroMsg}"/>
+        <c:if test = "${requestScope.errorMsg != null}">
+            <span class="error-msg"><fmt:message key="${requestScope.errorMsg}"/></span>
         </c:if>
 
         <form>

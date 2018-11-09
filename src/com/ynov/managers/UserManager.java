@@ -9,7 +9,7 @@ public class UserManager extends BaseManager
     public static boolean saveUser(User user){
         EntityManager em = getEntityManager();
         em.getTransaction().begin();
-        em.persist(user);
+        em.persist((User) user);
         em.getTransaction().commit();
         return em.find(User.class, user.getId()).getId() == user.getId() ;
     }
@@ -31,6 +31,23 @@ public class UserManager extends BaseManager
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username='"+username+"' and u.password='"+password+"'", User.class);
         User User = query.getResultList().stream().findFirst().orElse(null);
         return User;
+    }
+
+    public static void updateUser(int userId) {
+        EntityManager em = getEntityManager();
+        User user = em.find(User.class, userId);
+        em.getTransaction().begin();
+        em.persist(user);
+        em.getTransaction().commit();
+    }
+
+    public static void updatePassword(int userId, String newPassword) {
+        EntityManager em = getEntityManager();
+        User user = em.find(User.class, userId);
+        user.changePassword(newPassword);
+        em.getTransaction().begin();
+        em.persist(user);
+        em.getTransaction().commit();
     }
 
     public static void purgeTable() {
